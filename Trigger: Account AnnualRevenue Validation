@@ -1,0 +1,18 @@
+trigger AccountTrigger on Account (before insert) { // Before insert is default value
+	//Prepopulate shipping address from billing address
+	//
+	//CONTEXT VARIABLE (Values which developer needs to write logic)
+	//CONTEXT VARIABLE 1: Trigger.new -> List of record that are got inserted
+	//CONTEXT VARIABLE 2: Trigger.isBefore -> Return true if trigger is running on before event
+	//CONTEXT VARIABLE 3: Trigger.isAfter -> Return true if trigger is called when user has done insert operation
+	
+    if(Trigger.isBefore && Trigger.isInsert)
+    {
+        for(Account accRec: Trigger.new)
+        {
+            /* SCENARIO 2 - Throw error if annual revenue is less thank 1000 */
+            if(accRec.AnnualRevenue < 1000)
+            	accRec.addError('Annual Revenue cannot be less than 1000');
+    } 
+    // NEVER WRITE INSERT/UPDATE STATEMENT IN BEFORE EVENTS
+}
