@@ -1,0 +1,26 @@
+trigger AccountTrigger on Account (before insert, after insert) { // Before insert is default value
+	//Prepopulate shipping address from billing address
+	//
+	//CONTEXT VARIABLE (Values which developer needs to write logic)
+	//CONTEXT VARIABLE 1: Trigger.new -> List of record that are got inserted
+	//CONTEXT VARIABLE 2: Trigger.isBefore -> Return true if trigger is running on before event
+	//CONTEXT VARIABLE 3: Trigger.isInsert -> Return true if trigger is called when user has done insert operation
+	//CONTEXT VARIABLE 4: Trigger.ifAfter -> Return true if trigger is called after the records is inserted/updated
+    
+    // AFTER INSERT LOGIC TO BE WRITTEN IN THIS BELOW BLOCK
+    if(Trigger.isAfter && Trigger.isInsert) 
+    {
+        List<Contact> conListToInsert = new List<Contact>();
+        for(Account accRec: Trigger.new)
+        {
+            Contact con = new Contact();
+            con.LastName = accRec.Name;
+            con.AccountId = accRec.Id;
+            conListToInsert.add(con);
+        }
+        if(conListToInsert.size() > 0)
+        	Insert conListToInsert;
+    }
+    
+    // NEVER WRITE INSERT/UPDATE STATEMENT IN BEFORE EVENTS
+}
